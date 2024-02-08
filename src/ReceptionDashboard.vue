@@ -1,18 +1,40 @@
 <script setup>
-import { ref } from "vue";
-
+import { ref, onMounted } from "vue";
 const isSidebarOpen = ref(false);
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
 };
+onMounted(() => {
+  // Function to update current time
+  function updateTime() {
+    const currentTimeElement = document.getElementById("currentTime");
+    if (currentTimeElement) {
+      const now = new Date();
+      const hours = now.getHours().toString().padStart(2, "0");
+      const minutes = now.getMinutes().toString().padStart(2, "0");
+      const seconds = now.getSeconds().toString().padStart(2, "0");
+      currentTimeElement.textContent = ` ${hours}:${minutes}:${seconds}`;
+    }
+  }
+
+  // Update time every second
+  setInterval(updateTime, 1000);
+
+  // Initial call to display time immediately
+  updateTime();
+});
 </script>
 
 <template>
   <div class="mainHead">
     <div></div>
     <div id="app">
-      
-      <h2 id="Header">Welcome To clinofy</h2>
+      <div id="Header">
+        <h2 id="HeaderText">Welcome To Clinofy</h2>
+        <p id="currentTime"></p>
+      </div>
+
+      <div></div>
     </div>
   </div>
   <div class="mainHead">
@@ -54,28 +76,19 @@ const toggleSidebar = () => {
 
       <button class="hamburger-menu" @click="toggleSidebar">
         <span class="bar"></span>
-        <span class="bar"></span>
-        <span class="bar"></span>
       </button>
     </div>
-    <div>
-      <router-view>
-
-      </router-view>
-    </div>
   </div>
+  <router-view></router-view>
 </template>
 
 <style lang="scss">
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@100&display=swap");
 #app {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  color: #d4d4d4;
-  color: #3c3633;
-  background-color: #e0ccbe;
+  color: #ffffff;
 }
 * {
   margin: 0;
@@ -89,7 +102,30 @@ body {
   background-color: #f4f4f4;
 }
 #Header {
-  height: 10vh;
+  height: 17vh;
+  padding-top: 30px;
+  background-image: linear-gradient(
+    to right bottom,
+    #051d39,
+    #022247,
+    #011e3f,
+    #001a37,
+    #0b386e
+  );
+  letter-spacing: 2px;
+  font-size: 30px;
+}
+#currentTime {
+  color: white;
+  font-size: 30px;
+  font-family: "Roboto Condensed";
+  text-align: right;
+  letter-spacing: 2px;
+  margin-right: 10px;
+}
+#HeaderText {
+  font-family: "Roboto Condensed";
+  text-align: center;
 }
 .side-panel {
   min-height: 100vh; /* Extend side panel to full height */
@@ -109,7 +145,6 @@ body {
     #00152f
   );
 }
-
 .user-info {
   text-align: center;
   padding: 20px;
@@ -120,11 +155,6 @@ body {
   font-weight: 600;
   margin-bottom: 5px;
   letter-spacing: 2px;
-}
-
-.designation {
-  font-size: 0.8em;
-  color: #ccc;
 }
 
 .nav-links {
@@ -159,21 +189,6 @@ body {
   );
   border-radius: 20px;
 }
-.hamburger-menu {
-  display: none; /* Initially hidden on desktop */
-  position: fixed; /* Change to fixed positioning */
-  top: 20px;
-  right: 20px;
-  padding: 8px;
-  cursor: pointer;
-  background-color: transparent; /* Remove default button styling */
-  border: none;
-  z-index: 999; /* Ensure the hamburger menu stays on top */
-}
-
-.hamburger-menu:hover {
-  opacity: 0.8;
-}
 
 .hamburger-menu .bar {
   display: block;
@@ -182,27 +197,33 @@ body {
   background-color: #0c203a;
   margin-bottom: 5px;
 }
-.mainHead {
-  display: grid;
-  grid-template-columns: 250px 1fr;
-}
+
 /* Media queries for responsive behavior */
-@media (max-width: 768px) {
+@media (min-width: 768px) and (max-width: 1080px) {
+}
+@media (min-width: 360px) and (max-width: 768px) {
   .mainHead {
     grid-template-columns: 1fr; /* Single column layout for mobile */
   }
-  .side-panel {
-    transform: translateX(-250px); /* Collapse sidebar on mobile */
+  #Header {
+    height: 15vh;
   }
-
+  #HeaderText {
+    font-size: 25px;
+  }
+  #currentTime {
+    font-size: 15px;
+  }
   .side-panel.active {
-    transform: translateX(
-      0
-    ); /* Expand sidebar when hamburger menu is clicked */
+    transform: translateX(0);
   }
-
+  .side-panel {
+    transform: translateX(-250px); /* Move the side panel out of view */
+  }
   .hamburger-menu {
-    display: block; /* Show hamburger menu only on mobile */
+    display: block;
+    width: 25px; /* Set the width */
+    height: 25px; /* Set the height */
   }
 }
 </style>

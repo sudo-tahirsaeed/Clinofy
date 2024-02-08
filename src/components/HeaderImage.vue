@@ -3,13 +3,10 @@
       THIS IS Component
       
     </div>
-  
-    
-    
   </template>
   <script>
   export default {
-    name: "Main",
+    name: "MainImage",
     msg: {
       require: true,
       String,

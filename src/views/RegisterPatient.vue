@@ -1,10 +1,13 @@
 <script>
+
 export default {
   name: "RegisterPatient",
   msg: {
     require: true,
     String,
   },
+  
+  
   
 };
 </script>
