@@ -1,7 +1,7 @@
 import { createApp } from "vue";
-import App from "./DoctorDashboard.vue";
-import HomePage from "./views/Homepage";
-import AboutPage from "./views/About";
+import App from "./ReceptionDashboard.vue";
+import RegisterPatient from "./views/RegisterPatient";
+// import AboutPage from "./views/About";
 import { createRouter, createWebHistory } from "vue-router";
 
 const app = createApp(App);
@@ -10,8 +10,8 @@ const app = createApp(App);
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", component: HomePage },
-    { path: "/about", component: AboutPage },
+    { path: "/", component: RegisterPatient },
+    // { path: "/about", component: AboutPage },
   ],
 });
 app.use(router);
