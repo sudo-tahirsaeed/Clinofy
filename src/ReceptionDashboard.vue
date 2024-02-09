@@ -8,12 +8,27 @@ onMounted(() => {
   // Function to update current time
   function updateTime() {
     const currentTimeElement = document.getElementById("currentTime");
+    const currentDateElement = document.getElementById("currentDate");
     if (currentTimeElement) {
       const now = new Date();
-      const hours = now.getHours().toString().padStart(2, "0");
-      const minutes = now.getMinutes().toString().padStart(2, "0");
-      const seconds = now.getSeconds().toString().padStart(2, "0");
-      currentTimeElement.textContent = ` ${hours}:${minutes}:${seconds}`;
+
+      const timeString = now.toLocaleTimeString("en-US", { hour12: true });
+
+      // Get date in format 9 FEB 2024
+      const dateString = now.toLocaleDateString("en-US", {
+        day: "numeric",
+        month: "short",
+        year: "numeric",
+      });
+
+      // Get day in format Friday
+      const dayString = now.toLocaleDateString("en-US", { weekday: "long" });
+
+      // Combine the components
+      const formattedDateTime = `${timeString}\n`;
+      const dat = `${dateString}\n${dayString}`;
+      currentTimeElement.textContent = formattedDateTime;
+      currentDateElement.textContent = dat;
     }
   }
 
@@ -30,8 +45,15 @@ onMounted(() => {
     <div></div>
     <div id="app">
       <div id="Header">
-        <h2 id="HeaderText">Welcome To Clinofy</h2>
-        <p id="currentTime"></p>
+        <div class="imageHead">
+          <img src="./assets/medicine.png" height="30" />
+          <h2 id="HeaderText">Welcome To Clinofy</h2>
+        </div>
+
+        <div style="display: flex; flex-direction: column; margin-right: 13px">
+          <p id="currentTime"></p>
+          <p id="currentDate"></p>
+        </div>
       </div>
 
       <div></div>
@@ -102,7 +124,7 @@ body {
   background-color: #f4f4f4;
 }
 #Header {
-  height: 17vh;
+  height: 8vh;
   padding-top: 30px;
   background-image: linear-gradient(
     to right bottom,
@@ -112,20 +134,48 @@ body {
     #001a37,
     #0b386e
   );
+  display: flex;
   letter-spacing: 2px;
   font-size: 30px;
+  margin-left: 250px;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  align-content: center;
 }
 #currentTime {
-  color: white;
-  font-size: 30px;
+  color: rgb(168, 255, 97);
+  font-size: 20px;
+  font-weight: 600;
   font-family: "Roboto Condensed";
   text-align: right;
   letter-spacing: 2px;
   margin-right: 10px;
 }
+#currentDate {
+  color: rgb(255, 255, 255);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: "Roboto Condensed";
+  text-align: right;
+  letter-spacing: 2px;
+  margin-right: 10px;
+  margin-bottom: 30px;
+}
 #HeaderText {
   font-family: "Roboto Condensed";
-  text-align: center;
+
+  font-size: large;
+  margin-left: 10px;
+}
+.imageHead {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;
+  margin-left: 5px;
+  margin-bottom: 20px;
 }
 .side-panel {
   min-height: 100vh; /* Extend side panel to full height */
@@ -206,13 +256,21 @@ body {
     grid-template-columns: 1fr; /* Single column layout for mobile */
   }
   #Header {
-    height: 15vh;
+    height: 6vh;
+    margin-left: 0px;
+    flex-direction: row;
   }
   #HeaderText {
-    font-size: 25px;
+    font-size: 12px;
+    margin-bottom: 24px;
+    margin-left: 5px;
   }
   #currentTime {
     font-size: 15px;
+    display: none;
+  }
+  #currentDate {
+    display: none;
   }
   .side-panel.active {
     transform: translateX(0);
