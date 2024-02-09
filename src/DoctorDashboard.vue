@@ -8,6 +8,7 @@
           margin-left: 5px;
           margin-top: 5px;
           font-family: sans-serif;
+          background-color: red;
         "
       >
         Welcome To clinofy
@@ -57,8 +58,6 @@ const toggleSidebar = () => {
   -moz-osx-font-smoothing: grayscale;
   text-align: left;
   color: #d4d4d4;
-
-  background-color: #de294c;
 }
 * {
   margin: 0;
@@ -69,7 +68,7 @@ const toggleSidebar = () => {
 /* Global styles */
 body {
   font-family: sans-serif;
-  background-color: #f4f4f4;
+  background-color: #131111;
 }
 
 .side-panel {
@@ -81,6 +80,7 @@ body {
   top: 0; /* Align sidebar to the top */
   left: 0; /* Avoid gaps on the left side */
   transition: transform 0.3s ease-in-out; /* Smooth transition for collapsing on mobile */
+  z-index: 999;
 }
 
 .user-info {

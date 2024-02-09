@@ -1,7 +1,7 @@
 import { createApp } from "vue";
 import App from "./DoctorDashboard.vue";
-import HomePage from "./views/Homepage";
-import AboutPage from "./views/About";
+import DashboardDoctor from "./views/Doctor/DashboardPage";
+import DetailsModal from "../src/components/Doctor/DetailsModal";
 import { createRouter, createWebHistory } from "vue-router";
 
 const app = createApp(App);
@@ -10,8 +10,8 @@ const app = createApp(App);
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", component: HomePage },
-    { path: "/about", component: AboutPage },
+    { path: "/", component: DetailsModal },
+    { path: "/about", component: DashboardDoctor },
   ],
 });
 app.use(router);
