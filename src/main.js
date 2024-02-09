@@ -1,5 +1,5 @@
 import { createApp } from "vue";
-import App from "./DoctorDashboard.vue";
+import App from "./PharmacyDash.vue";
 import HomePage from "./views/Homepage";
 import AboutPage from "./views/About";
 import { createRouter, createWebHistory } from "vue-router";

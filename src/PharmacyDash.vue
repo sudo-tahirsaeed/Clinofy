@@ -1,30 +1,35 @@
 <template>
   <div class="mainHead">
     <div></div>
-    <div id="#app" style="height: 5vh; align-content: center">
-      <h2
-        style="
-          text-align: center;
-          margin-left: 5px;
-          margin-top: 5px;
-          font-family: sans-serif;
-        "
-      >
-        Welcome To clinofy
-      </h2>
+    <div id="#app" >
+      <br>
     </div>
   </div>
   <div class="mainHead">
     <div>
       <div class="side-panel" :class="{ active: isSidebarOpen }">
         <div class="user-info">
-          <p class="username">Tahir Saeed</p>
-          <p class="designation">Doctor</p>
+          <img src="./assets/logo.png" alt="" width="60" height="60">
+          <p class="name">Clinofy</p>
+          <!-- <p class="designation">Doctor</p> -->
         </div>
         <nav class="nav-links">
+          <div class="item">
+            <img src="./assets/doctor.png" alt="" height="30" width="30">
           <a href="#" class="active">Dashboard</a>
-          <a href="#">Billing</a>
-          <a href="#">History</a>
+        </div>
+        <div class="item">
+            <img src="./assets/pharmacy.png" alt="" height="30" width="30">
+          <a href="#">Pharmacy</a>
+        </div>
+        <div class="item">
+            <img src="./assets/laboratory.png" alt="" height="30" width="30">
+          <a href="#" >Laboratory</a>
+        </div>
+        <div class="item">
+            <img src="./assets/appointment.png" alt="" height="30" width="30">
+          <a href="#" >Reception</a>
+        </div>
         </nav>
       </div>
 
@@ -58,7 +63,7 @@ const toggleSidebar = () => {
   text-align: left;
   color: #d4d4d4;
 
-  background-color: #de294c;
+  background-color: #fff;
 }
 * {
   margin: 0;
@@ -75,7 +80,7 @@ body {
 .side-panel {
   min-height: 100vh; /* Extend side panel to full height */
   width: 250px; /* Consistent width in both desktop and mobile views */
-  background-color: #160d0d; /* Use a neutral dark color for the sidebar */
+  background-color: #336bfb; /* Use a neutral dark color for the sidebar */
   color: #fff; /* Clear white text for readability */
   position: fixed; /* Fix sidebar to the left side */
   top: 0; /* Align sidebar to the top */
@@ -83,16 +88,19 @@ body {
   transition: transform 0.3s ease-in-out; /* Smooth transition for collapsing on mobile */
 }
 
-.user-info {
-  text-align: center;
+.user-info { 
+  display: flex;
+  flex-direction: row;
+  /* text-align: center; */
   padding: 20px;
-  border-bottom: 1px solid #222;
+  align-items: center;
+
 }
 
-.username {
-  font-size: 1.2em;
+.name {
+  font-size: 2em;
   font-weight: 600;
-  margin-bottom: 5px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .designation {
@@ -104,19 +112,27 @@ body {
   list-style: none;
   padding: 20px;
 }
+.item{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding-bottom: 10px;
+}
 
 .nav-links a {
   display: block;
   padding: 10px 15px;
   text-decoration: none;
   color: #fff;
-  border-bottom: 1px solid #222;
+  /* border-bottom: 1px solid #222; */
   transition: background-color 0.2s ease-in-out;
+  font-size: 15x;
 }
 
 .nav-links a:hover,
 .nav-links a.active {
-  background-color: #de294c;
+  color:#09c1e6
+
 }
 
 .hamburger-menu {
@@ -139,7 +155,7 @@ body {
   display: block;
   width: 20px;
   height: 2px;
-  background-color: #940000;
+  background-color: #346cfc;
   margin-bottom: 5px;
 }
 .mainHead {
