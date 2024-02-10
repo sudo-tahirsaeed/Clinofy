@@ -1,28 +1,19 @@
 <script>
-
+import InputFields from '@/components/InputFields.vue';
 export default {
-  name: "RegisterPatient",
-  msg: {
-    require: true,
-    String,
-  },
-  
-  
-  
+    name: "RegisterPatient",
+    msg: {
+        require: true,
+        String,
+    },
+    components: { InputFields }
 };
 </script>
 <template>
+  <InputFields></InputFields>
   
-  <div class="Register">THIS IS HOMEPAGE</div>
 </template>
 
 <style>
-.home {
-  background-color: rgb(255, 255, 255);
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  color: black;
-  text-align: left;
-}
+
 </style>

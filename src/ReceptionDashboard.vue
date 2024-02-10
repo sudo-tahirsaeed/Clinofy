@@ -100,8 +100,9 @@ onMounted(() => {
         <span class="bar"></span>
       </button>
     </div>
+    <router-view> </router-view>
   </div>
-  <router-view></router-view>
+  
 </template>
 
 <style lang="scss">
