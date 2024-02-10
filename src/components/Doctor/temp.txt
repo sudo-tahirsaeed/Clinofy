@@ -1,0 +1,54 @@
+
+
+<template>
+ 
+  <div class="card flex justify-content-center">
+    <Dropdown
+      v-model="selectedCountry"
+      :options="countries"
+      filter
+      optionLabel="name"
+      placeholder="Select a Country"
+      class="w-full md:w-14rem"
+    >
+      <template #value="slotProps">
+        <div v-if="slotProps.value" class="flex align-items-center">
+          <div>{{ slotProps.value.name }}</div>
+        </div>
+        <span v-else>
+          {{ slotProps.placeholder }}
+        </span>
+      </template>
+      <template #option="slotProps">
+        <div class="flex align-items-center">
+          <div>{{ slotProps.option.name }}</div>
+        </div>
+      </template>
+    </Dropdown>
+  </div>
+</template>
+
+<script setup>
+import Dropdown from "primevue/dropdown";
+
+import "primevue/resources/themes/lara-light-green/theme.css";
+import { ref } from "vue";
+
+const selectedCountry = ref();
+const countries = ref([
+  { name: "Australia", code: "AU" },
+  { name: "Brazil", code: "BR" },
+  { name: "China", code: "CN" },
+  { name: "Egypt", code: "EG" },
+  { name: "France", code: "FR" },
+  { name: "Germany", code: "DE" },
+  { name: "India", code: "IN" },
+  { name: "Japan", code: "JP" },
+  { name: "Spain", code: "ES" },
+  { name: "United States", code: "US" },
+]);
+</script>
+
+<style scoped>
+/* Add any necessary CSS styles here */
+</style>

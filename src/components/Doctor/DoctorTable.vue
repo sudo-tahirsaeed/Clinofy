@@ -1,6 +1,9 @@
 <template>
   <div class="topdiv">
-    <div class="main-table-containter">
+    <div v-if="showModal">
+      <DoctorModal @toggle="toggleComponent" />
+    </div>
+    <div v-else class="main-table-containter">
       <div class="title-table-container">
         <div class="subtitle">
           <h3 class="heading" style="display: flex; align-items: center">
@@ -48,7 +51,7 @@
               <td>{{ patient.dateTime }}</td>
               <td>{{ patient.billStat }}</td>
               <td>
-                <button class="button">
+                <button @click="toggleComponent" class="button">
                   <span class="button-content">View</span>
                 </button>
               </td>
@@ -61,11 +64,16 @@
   </div>
 </template>
 <script>
+import DoctorModal from "../Doctor/DetailsModal.vue";
+
 export default {
   name: "DoctorTable",
-
+  components: {
+    DoctorModal, // Register ComponentB
+  },
   data() {
     return {
+      showModal: false,
       currentPatients: [
         {
           patientId: "4405",
@@ -357,6 +365,12 @@ export default {
     observer.observe(this.$refs.sentinel);
   },
   methods: {
+    toggleComponent() {
+      // Toggle the value of showComponent to show/hide the component
+
+      console.log("OK");
+      this.showModal = !this.showModal;
+    },
     onIntersection(entries) {
       if (
         entries[0].isIntersecting &&
