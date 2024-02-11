@@ -4,6 +4,10 @@ import DashboardDoctor from "./views/Doctor/DashboardPage";
 import { createRouter, createWebHistory } from "vue-router";
 import MedsAndTests from "./components/Doctor/MedsAndTests";
 import PrimeVue from "primevue/config";
+import "primevue/resources/themes/lara-light-green/theme.css";
+import "primevue/resources/primevue.min.css"; /* Deprecated */
+import "primeicons/primeicons.css";
+import "primeflex/primeflex.css";
 
 const app = createApp(App);
 // app.component("homePage", HomePage);

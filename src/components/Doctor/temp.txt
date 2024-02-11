@@ -1,54 +1,235 @@
-
-
 <template>
- 
-  <div class="card flex justify-content-center">
-    <Dropdown
-      v-model="selectedCountry"
-      :options="countries"
-      filter
-      optionLabel="name"
-      placeholder="Select a Country"
-      class="w-full md:w-14rem"
+  <DialogBox :states="errorvisible" @updateDB="toogleDialog" />
+
+  <div class="container">
+    <div
+      class="first-column"
+      style="background-color: red; border: 1px solid black"
     >
-      <template #value="slotProps">
-        <div v-if="slotProps.value" class="flex align-items-center">
-          <div>{{ slotProps.value.name }}</div>
+      <h3>Patient Name: TAHIR</h3>
+      <h3>Patient Age: 17</h3>
+      <h3>Patient ID: 1558</h3>
+    </div>
+    <div class="second">
+      <div
+        class="column"
+        id="divide"
+        style="background-color: rgb(255, 255, 255); border: 1px solid black"
+      >
+        <div
+          style="
+            background-color: rgb(247, 247, 247);
+            border: 1px solid rgb(243, 31, 31);
+            display: flex;
+            justify-content: left;
+            flex-direction: column;
+          "
+        >
+          <div
+            style="
+              height: 100%;
+              display: flex;
+              justify-content: left;
+              margin-left: 5px;
+            "
+          >
+            <div class="dropdiv">
+              <div style="width: 100%; justify-self: center">
+                <h3 class="heading">Add Medicines</h3>
+                <hr />
+              </div>
+              <Dropdown
+                v-model="selectedmed"
+                :options="meds"
+                filter
+                optionLabel="name"
+                placeholder="Select a Medicine"
+                class="w-full md:w-14rem"
+                id="dd"
+                style="align-items: center"
+              >
+                <template #value="slotProps">
+                  <div v-if="slotProps.value" class="flex align-items-center">
+                    <div>{{ slotProps.value.name }}</div>
+                  </div>
+                  <span v-else>
+                    {{ slotProps.placeholder }}
+                  </span>
+                </template>
+                <template #option="slotProps">
+                  <div class="flex align-items-center">
+                    <div>{{ slotProps.option.name }}</div>
+                  </div>
+                </template>
+              </Dropdown>
+              <div class="customdiv">
+                <label style="color: black; font-size: 14px" for="username">
+                  Custom Medicine</label
+                >
+                <div style="display: flex; flex-direction: row">
+                  <InputText
+                    id="username"
+                    v-model="custommed"
+                    aria-describedby="username-help"
+                    style="text-wrap: wrap"
+                  />
+                  <div style="margin-left: 5px">
+                    <button
+                      @click="addMedicine(custommed, 0)"
+                      class="buttonx1"
+                      style="
+                        background-color: #de294c;
+                        border: none;
+                        padding-left: 15px;
+                        padding-right: 15px;
+                        border-radius: 11px;
+                        font-size: larger;
+                        font-weight: 600;
+                        color: white;
+                        cursor: pointer;
+                      "
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <span v-else>
-          {{ slotProps.placeholder }}
-        </span>
-      </template>
-      <template #option="slotProps">
-        <div class="flex align-items-center">
-          <div>{{ slotProps.option.name }}</div>
+        <div class="listdiv">
+          <h3 class="heading">Selected Medicines</h3>
+          <div v-if="!selectedMedicines">
+            <h3 style="text-align: center; margin-top: 10%; color: #de294c">
+              <img
+                src="../../assets/notfound.png"
+                height="20"
+                style="margin-right: 7px"
+              />No Medicine Selected
+            </h3>
+          </div>
+          <ul v-else>
+            <li v-for="medicine in selectedMedicines" :key="medicine.id">
+              {{ medicine.name }}
+              <div>
+                <button @click="removeMedicine(medicine.id)" class="buttonx">
+                  <img src="../../assets/dustbin.png" height="15" />Remove
+                </button>
+              </div>
+            </li>
+          </ul>
         </div>
-      </template>
-    </Dropdown>
+      </div>
+      <div
+        class="column"
+        id="divide"
+        style="background-color: rgb(255, 255, 255); border: 1px solid black"
+      >
+        <div
+          style="
+            background-color: rgb(247, 247, 247);
+            border: 1px solid rgb(243, 31, 31);
+            display: flex;
+            justify-content: left;
+            flex-direction: column;
+          "
+        >
+          <div
+            style="
+              height: 100%;
+              display: flex;
+              justify-content: left;
+              margin-left: 5px;
+            "
+          >
+            <div class="dropdiv">
+              <div style="width: 100%; justify-self: center">
+                <h3 class="heading">Lab Tests</h3>
+                <hr />
+              </div>
+              <Dropdown
+                v-model="selectedtest"
+                :options="tests"
+                filter
+                optionLabel="name"
+                placeholder="Select a Medicine"
+                class="w-full md:w-14rem"
+                id="dd"
+                style="align-items: center"
+              >
+                <template #value="slotProps">
+                  <div v-if="slotProps.value" class="flex align-items-center">
+                    <div>{{ slotProps.value.name }}</div>
+                  </div>
+                  <span v-else>
+                    {{ slotProps.placeholder }}
+                  </span>
+                </template>
+                <template #option="slotProps">
+                  <div class="flex align-items-center">
+                    <div>{{ slotProps.option.name }}</div>
+                  </div>
+                </template>
+              </Dropdown>
+              <div class="customdiv">
+                <label style="color: black; font-size: 14px" for="username">
+                  Custom Tests</label
+                >
+                <div style="display: flex; flex-direction: row">
+                  <InputText
+                    id="username"
+                    v-model="customtest"
+                    aria-describedby="username-help"
+                    style="text-wrap: wrap"
+                  />
+                  <div style="margin-left: 5px">
+                    <button
+                      @click="addLabTest(customtest)"
+                      class="buttonx1"
+                      style="
+                        background-color: #de294c;
+                        border: none;
+                        padding-left: 15px;
+                        padding-right: 15px;
+                        border-radius: 11px;
+                        font-size: larger;
+                        font-weight: 600;
+                        color: white;
+                        cursor: pointer;
+                      "
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="listdiv">
+          <h3 class="heading">Selected Tests</h3>
+          <div v-if="!selectedMedicines">
+            <h3 style="text-align: center; margin-top: 10%; color: #de294c">
+              <img
+                src="../../assets/notfound.png"
+                height="20"
+                style="margin-right: 7px"
+              />No Tests Selected
+            </h3>
+          </div>
+          <ul v-else>
+            <li v-for="test in selectedTests" :key="test.id">
+              {{ test.name }}
+              <div>
+                <button @click="removeLabTest(test.id)" class="buttonx">
+                  <img src="../../assets/dustbin.png" height="15" />Remove
+                </button>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <!-- Add more columns as needed -->
   </div>
 </template>
-
-<script setup>
-import Dropdown from "primevue/dropdown";
-
-import "primevue/resources/themes/lara-light-green/theme.css";
-import { ref } from "vue";
-
-const selectedCountry = ref();
-const countries = ref([
-  { name: "Australia", code: "AU" },
-  { name: "Brazil", code: "BR" },
-  { name: "China", code: "CN" },
-  { name: "Egypt", code: "EG" },
-  { name: "France", code: "FR" },
-  { name: "Germany", code: "DE" },
-  { name: "India", code: "IN" },
-  { name: "Japan", code: "JP" },
-  { name: "Spain", code: "ES" },
-  { name: "United States", code: "US" },
-]);
-</script>
-
-<style scoped>
-/* Add any necessary CSS styles here */
-</style>
