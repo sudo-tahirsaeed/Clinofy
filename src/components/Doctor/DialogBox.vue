@@ -41,7 +41,7 @@ import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 </script>
 <script>
-import { defineComponent, watch } from "vue"; // Import defineComponent
+import { defineComponent } from "vue"; // Import defineComponent
 
 export default defineComponent({
   emits: ["updateDB"],
@@ -50,16 +50,16 @@ export default defineComponent({
     msg: String,
   },
   watch: {
-    states: function (newVal, oldVal) {
+    states: function (newVal) {
       // watch it
       this.statesx = newVal;
     },
-    msg: function (newVal, oldVal) {
+    msg: function (newVal) {
       // watch it
       this.msgx = newVal;
     },
   },
-  setup(props) {
+  setup() {
     // Import the components and return them along with the message prop
     return {
       Dialog,

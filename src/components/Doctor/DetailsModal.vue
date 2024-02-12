@@ -246,7 +246,7 @@ export default {
   data() {
     return {
       patient: {
-        name: "tahir",
+        name: "Umair Arshad",
         temperature: "123",
         phoneNo: "123",
         cnic: "2315865656565565623",
@@ -258,9 +258,9 @@ export default {
     };
   },
   methods: {
-    toggle() {
-      // Emit toggle event to notify the parent component
-      this.$emit("toggle");
+    kill() {
+      // jani ye event bakchodi kar rha parent side
+      this.$emit("kill");
     },
   },
 };

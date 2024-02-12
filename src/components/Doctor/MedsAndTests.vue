@@ -61,90 +61,114 @@
             "
           >
             <div class="dropdiv">
-              <div style="width: 100%; justify-self: center">
-                <h3 class="heading">Add Medicines</h3>
-                <hr />
-              </div>
-              <Dropdown
-                v-model="selectedmed"
-                :options="meds"
-                filter
-                optionLabel="name"
-                placeholder="Select a Medicine"
-                class="w-full md:w-14rem"
-                id="dd"
-                style="align-items: center"
+              <ScrollPanel
+                style="width: 100%; height: 100%"
+                :pt="{
+                  wrapper: {
+                    style: {
+                      'border-right': '8px solid var(--surface-ground)',
+                    },
+                  },
+                  bary: 'hover:bg-primary-400 bg-primary-300 opacity-100',
+                }"
               >
-                <template #value="slotProps">
-                  <div v-if="slotProps.value" class="flex align-items-center">
-                    <div>{{ slotProps.value.name }}</div>
-                  </div>
-                  <span v-else>
-                    {{ slotProps.placeholder }}
-                  </span>
-                </template>
-                <template #option="slotProps">
-                  <div class="flex align-items-center">
-                    <div>{{ slotProps.option.name }}</div>
-                  </div>
-                </template>
-              </Dropdown>
-              <div class="customdiv">
-                <label style="color: black; font-size: 14px" for="username">
-                  Custom Medicine</label
+                <div style="width: 100%; justify-self: center">
+                  <h3 class="heading">Add Medicines</h3>
+                  <hr />
+                </div>
+                <Dropdown
+                  v-model="selectedmed"
+                  :options="meds"
+                  filter
+                  optionLabel="name"
+                  placeholder="Select a Medicine"
+                  class="w-full md:w-14rem"
+                  id="dd"
+                  style="align-items: center"
                 >
-                <div style="display: flex; flex-direction: row">
-                  <InputText
-                    id="username"
-                    v-model="custommed"
-                    aria-describedby="username-help"
-                    style="text-wrap: wrap"
-                  />
-                  <div style="margin-left: 5px">
-                    <button
-                      @click="addMedicine(custommed, 0)"
-                      class="buttonx1"
-                      style="
-                        background-color: #de294c;
-                        border: none;
-                        padding-left: 15px;
-                        padding-right: 15px;
-                        border-radius: 11px;
-                        font-size: larger;
-                        font-weight: 600;
-                        color: white;
-                        cursor: pointer;
-                      "
-                    >
-                      +
-                    </button>
+                  <template #value="slotProps">
+                    <div v-if="slotProps.value" class="flex align-items-center">
+                      <div>{{ slotProps.value.name }}</div>
+                    </div>
+                    <span v-else>
+                      {{ slotProps.placeholder }}
+                    </span>
+                  </template>
+                  <template #option="slotProps">
+                    <div class="flex align-items-center">
+                      <div>{{ slotProps.option.name }}</div>
+                    </div>
+                  </template>
+                </Dropdown>
+                <div class="customdiv">
+                  <label style="color: black; font-size: 14px" for="username">
+                    Custom Medicine</label
+                  >
+                  <div style="display: flex; flex-direction: row">
+                    <InputText
+                      id="username"
+                      v-model="custommed"
+                      aria-describedby="username-help"
+                      style="text-wrap: wrap"
+                    />
+                    <div style="margin-left: 5px">
+                      <button
+                        @click="addMedicine(custommed, 0)"
+                        class="buttonx1"
+                        style="
+                          background-color: #de294c;
+                          border: none;
+                          padding-left: 15px;
+                          padding-right: 15px;
+                          border-radius: 11px;
+                          font-size: larger;
+                          font-weight: 600;
+                          color: white;
+                          cursor: pointer;
+                        "
+                      >
+                        +
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </ScrollPanel>
             </div>
           </div>
         </div>
         <div class="listdiv">
-          <h3 class="heading">Selected Medicines</h3>
-          <div v-if="!selectedMedicines">
-            <h3 style="text-align: center; margin-top: 10%; color: #de294c">
-              <img
-                src="../../assets/notfound.png"
-                height="20"
-                style="margin-right: 7px"
-              />No Medicine Selected
-            </h3>
-          </div>
-          <ul v-else>
-            <li v-for="medicine in selectedMedicines" :key="medicine.id">
-              {{ medicine.name }}
-              <div>
-                <button @click="removeMedicine(medicine.id)" class="buttonx">
-                  <img src="../../assets/dustbin.png" height="15" />Remove
-                </button>
-              </div>
-            </li>
-          </ul>
+          <ScrollPanel
+            style="width: 100%; height: 100%"
+            :pt="{
+              wrapper: {
+                style: {
+                  'border-right': '8px solid var(--surface-ground)',
+                },
+              },
+              bary: 'hover:bg-primary-400 bg-primary-300 opacity-100',
+            }"
+          >
+            <h3 class="heading">Selected Medicines</h3>
+            <div v-if="!selectedMedicines">
+              <h3 style="text-align: center; margin-top: 10%; color: #de294c">
+                <img
+                  src="../../assets/notfound.png"
+                  height="20"
+                  style="margin-right: 7px"
+                />No Medicine Selected
+              </h3>
+            </div>
+            <ul v-else>
+              <li v-for="medicine in selectedMedicines" :key="medicine.id">
+                {{ medicine.name }}
+                <div>
+                  <button @click="removeMedicine(medicine.id)" class="buttonx">
+                    <img src="../../assets/dustbin.png" height="15" />Remove
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </ScrollPanel>
         </div>
       </div>
       <div
@@ -237,26 +261,38 @@
           </div>
         </div>
         <div class="listdiv">
-          <h3 class="heading">Selected Tests</h3>
-          <div v-if="!selectedMedicines">
-            <h3 style="text-align: center; margin-top: 10%; color: #de294c">
-              <img
-                src="../../assets/notfound.png"
-                height="20"
-                style="margin-right: 7px"
-              />No Tests Selected
-            </h3>
-          </div>
-          <ul v-else>
-            <li v-for="test in selectedTests" :key="test.id">
-              {{ test.name }}
-              <div>
-                <button @click="removeLabTest(test.id)" class="buttonx">
-                  <img src="../../assets/dustbin.png" height="15" />Remove
-                </button>
-              </div>
-            </li>
-          </ul>
+          <ScrollPanel
+            style="width: 100%; height: 100%"
+            :pt="{
+              wrapper: {
+                style: {
+                  'border-right': '8px solid var(--surface-ground)',
+                },
+              },
+              bary: 'hover:bg-primary-400 bg-primary-300 opacity-100',
+            }"
+          >
+            <h3 class="heading">Selected Tests</h3>
+            <div v-if="!selectedMedicines">
+              <h3 style="text-align: center; margin-top: 10%; color: #de294c">
+                <img
+                  src="../../assets/notfound.png"
+                  height="20"
+                  style="margin-right: 7px"
+                />No Tests Selected
+              </h3>
+            </div>
+            <ul v-else>
+              <li v-for="test in selectedTests" :key="test.id">
+                {{ test.name }}
+                <div>
+                  <button @click="removeLabTest(test.id)" class="buttonx">
+                    <img src="../../assets/dustbin.png" height="15" />Remove
+                  </button>
+                </div>
+              </li>
+            </ul>
+          </ScrollPanel>
         </div>
       </div>
     </div>
@@ -282,6 +318,7 @@ import DialogBox from "./DialogBox.vue";
 import RemarksModal from "./RemarksModal.vue";
 import InputText from "primevue/inputtext";
 import Dropdown from "primevue/dropdown";
+import ScrollPanel from "primevue/scrollpanel";
 
 import { ref } from "vue";
 const { v4: uuidv4 } = require("uuid");
@@ -293,6 +330,7 @@ export default {
     InputText,
     Dropdown,
     RemarksModal,
+    ScrollPanel,
   },
   watch: {
     selectedmed: function (newValue) {
@@ -350,6 +388,15 @@ export default {
     return {
       selectedMedicine: null,
       selectedMedicines: [
+        { id: 1, name: "Medicine ABS " },
+        { id: 2, name: "Panadol" },
+        { id: 3, name: "Dispirin" },
+        { id: 1, name: "Medicine ABS " },
+        { id: 2, name: "Panadol" },
+        { id: 3, name: "Dispirin" },
+        { id: 1, name: "Medicine ABS " },
+        { id: 2, name: "Panadol" },
+        { id: 3, name: "Dispirin" },
         { id: 1, name: "Medicine ABS " },
         { id: 2, name: "Panadol" },
         { id: 3, name: "Dispirin" },
@@ -490,7 +537,7 @@ button {
   justify-content: left;
   margin-left: 5%;
   margin-top: 2%;
-  overflow-y: scroll;
+
   flex-direction: column;
 }
 #dd {
@@ -530,7 +577,6 @@ button {
   justify-content: left;
   align-items: left;
   max-height: 100%;
-  overflow-y: scroll;
 }
 .customdiv {
   margin-top: 5%;
