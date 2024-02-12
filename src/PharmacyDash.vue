@@ -135,6 +135,7 @@ body {
 
 }
 
+
 .hamburger-menu {
   display: none; /* Initially hidden on desktop */
   position: fixed; /* Change to fixed positioning */
