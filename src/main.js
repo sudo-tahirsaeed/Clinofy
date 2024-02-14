@@ -1,17 +1,18 @@
 import { createApp } from "vue";
 import App from "./PharmacyDash.vue";
-import HomePage from "./views/Homepage";
-import AboutPage from "./views/About";
+import Pharmacy from "./views/pharmacy";
+import LabPage from "./views/Lab.vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const app = createApp(App);
-// app.component("homePage", HomePage);
-// app.component("aboutPage", AboutPage);
+// app.component("Pharmacy", Pharmacy);
+// app.component("LabPage", LabPage);
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: "/", component: HomePage },
-    { path: "/about", component: AboutPage },
+    { path: "/", component: Pharmacy },
+    { path: "/pharmacy", component: Pharmacy },
+    { path: "/lab", component: LabPage },
   ],
 });
 app.use(router);

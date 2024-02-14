@@ -1,27 +1,20 @@
 <template>
   <div class="home">
     <div class="header">
-    <div class="search-container">
-
-      <img src="@/assets/search.png" alt="Search Icon" class="search-icon" />
-      <input
-        v-model="searchQuery"
-        placeholder="Search by Medicine Name"
-        class="search-bar"
-      />
-     
-      <!-- Floating Button -->
-      <button class="floating-button" @click="openModal">
-        + 
-      </button>
-
-      <!-- Modal -->
-      <MedicineModal v-if="isModalOpen" @closeModal="closeModal" />
+      <div class="search-container">
+        <img src="@/assets/search.png" alt="Search Icon" class="search-icon" />
+        <input
+          v-model="searchQuery"
+          placeholder="Search by Medicine Name"
+          class="search-bar"
+        />
+        <button class="floating-button" @click="openModal">+</button>
+        <MedicineModal v-if="isModalOpen" @closeModal="() => closeModal()" />
+      </div>
+      <div class="counter">In Queue: {{ filteredMedicines.length }}</div>
     </div>
-    <div class="counter"> Remaining: {{ filteredMedicines.length }} </div>
-  </div>
     <h1>Pharmacy</h1>
-
+    <div class="responsive-table">
     <table class="medicine-table">
       <thead class="name-table">
         <tr>
@@ -30,11 +23,9 @@
           <th>Price per Sachet</th>
           <th>Price per Tablet</th>
           <th>Available Stock</th>
-          <!-- <th>Actions</th> -->
         </tr>
       </thead>
       <tbody class="medicine-table">
-        <!-- Filtered and paginated medicine list -->
         <tr
           v-for="(medicine, index) in filteredMedicines"
           :key="index"
@@ -49,7 +40,8 @@
         </tr>
       </tbody>
     </table>
-<!-- Patient Section -->
+    </div>
+    <div class="responsive-table">
     <div class="patient-section">
       <h2>Current Patients and Medicines</h2>
       <table class="patient-table">
@@ -62,8 +54,12 @@
           </tr>
         </thead>
         <tbody>
-          <!-- Loop through current patients and display their information -->
-          <tr v-for="(patient, index) in currentPatients" :key="index">
+          <tr
+            v-for="(patient, index) in currentPatients"
+            :key="index"
+            @click="addToBillFromPatient(patient, index)"
+            class="clickable-row"
+          >
             <td>{{ patient.appointmentNumber }}</td>
             <td>{{ patient.patientName }}</td>
             <td>{{ patient.patientId }}</td>
@@ -78,8 +74,9 @@
         </tbody>
       </table>
     </div>
+    </div>
+  
 
-    <!-- Bill Section -->
     <div class="bill-section">
       <h2>Your Bill</h2>
       <ul class="bill-list">
@@ -99,49 +96,49 @@
 </template>
 
 <script>
- import MedicineModal from "@/components/MedicineModal.vue";
+import MedicineModal from "@/components/MedicineModal.vue";
 export default {
   components: {
     MedicineModal,
   },
-    name: "HomePage",
-    data() {
-        return {
-            isModalOpen: false,
-            medicines: [
-                {
-                    name: "Medicine 1",
-                    pricePerPacket: 10.99,
-                    pricePerSachet: 5.99,
-                    pricePerTablet: 1.99,
-                    availableStock: 50,
-                },
-                {
-                    name: "Medicine 2",
-                    pricePerPacket: 12.99,
-                    pricePerSachet: 6.99,
-                    pricePerTablet: 2.99,
-                    availableStock: 30,
-                },
-                {
-                    name: "Medicine 2",
-                    pricePerPacket: 12.99,
-                    pricePerSachet: 6.99,
-                    pricePerTablet: 2.99,
-                    availableStock: 30,
-                },
-                {
-                    name: "Medicine 2",
-                    pricePerPacket: 12.99,
-                    pricePerSachet: 6.99,
-                    pricePerTablet: 2.99,
-                    availableStock: 30,
-                },
-            ],
-            searchQuery: "",
-            itemsPerPage: 30,
-            billItems: [],
-            currentPatients: [
+  name: "HomePage",
+  data() {
+    return {
+      isModalOpen: false,
+      medicines: [
+        {
+          name: "Medicine 1",
+          pricePerPacket: 10.99,
+          pricePerSachet: 5.99,
+          pricePerTablet: 1.99,
+          availableStock: 50,
+        },
+        {
+          name: "Medicine 2",
+          pricePerPacket: 12.99,
+          pricePerSachet: 6.99,
+          pricePerTablet: 2.99,
+          availableStock: 30,
+        },
+        {
+          name: "Medicine 2",
+          pricePerPacket: 12.99,
+          pricePerSachet: 6.99,
+          pricePerTablet: 2.99,
+          availableStock: 30,
+        },
+        {
+          name: "Medicine 2",
+          pricePerPacket: 12.99,
+          pricePerSachet: 6.99,
+          pricePerTablet: 2.99,
+          availableStock: 30,
+        },
+      ],
+      searchQuery: "",
+      itemsPerPage: 30,
+      billItems: [],
+      currentPatients: [
         {
           appointmentNumber: 101,
           patientName: "John Doe",
@@ -155,43 +152,65 @@ export default {
           medicines: ["Medicine 3", "Medicine 4"],
         },
       ],
-        };
+    };
+  },
+  computed: {
+    filteredMedicines() {
+      // Filter medicines based on the search query
+      const filtered = this.medicines.filter((medicine) =>
+        medicine.name.toLowerCase().includes(this.searchQuery.toLowerCase())
+      );
+      // Return the first 'itemsPerPage' medicines
+      return filtered.slice(0, this.itemsPerPage);
     },
-    computed: {
-        filteredMedicines() {
-            // Filter medicines based on the search query
-            const filtered = this.medicines.filter((medicine) => medicine.name.toLowerCase().includes(this.searchQuery.toLowerCase()));
-            // Return the first 'itemsPerPage' medicines
-            return filtered.slice(0, this.itemsPerPage);
-        },
+  },
+  methods: {
+    addToBillFromPatient(patient, index) {
+      // Add medicines from the patient to the bill
+      patient.medicines.forEach((medicine) => {
+        this.billItems.push({
+          name: medicine,
+          price:
+            this.medicines.find((m) => m.name === medicine)?.pricePerPacket ||
+            0,
+        });
+      });
+
+      // Remove the patient from the currentPatients array
+      this.removePatient(index);
     },
-    methods: {
-        openModal() {
-            this.isModalOpen = true;
-        },
-        closeModal() {
-            this.isModalOpen = false;
-        },
-        removeFromBill(index) {
-            // Remove the selected item from the billItems array
-            this.billItems.splice(index, 1);
-        },
-        calculateTotal() {
-            // Calculate the total bill based on the prices of items in billItems
-            return this.billItems.reduce((total, item) => total + item.price, 0);
-        },
-        addToBill(medicine) {
-            // Add the selected medicine to the bill
-            this.billItems.push({
-                name: medicine.name,
-                price: medicine.pricePerPacket, // You can customize this based on your requirements
-            });
-        },
-        checkout() {
-            // Implement checkout logic here, e.g., display a message or proceed with payment
-            console.log("Checkout clicked! Bill items:", this.billItems);
-        },
+
+    removePatient(index) {
+      // Remove the selected patient from the currentPatients array
+      this.currentPatients.splice(index, 1);
     },
+    openModal() {
+      this.isModalOpen = true;
+    },
+    closeModal() {
+      console.log("Closing modal...");
+      this.isModalOpen = false;
+    },
+    removeFromBill(index) {
+      // Remove the selected item from the billItems array
+      this.billItems.splice(index, 1);
+    },
+    calculateTotal() {
+      // Calculate the total bill based on the prices of items in billItems
+      return this.billItems.reduce((total, item) => total + item.price, 0);
+    },
+    addToBill(medicine) {
+      // Add the selected medicine to the bill
+      this.billItems.push({
+        name: medicine.name,
+        price: medicine.pricePerPacket, // You can customize this based on your requirements
+      });
+    },
+    checkout() {
+      // Implement checkout logic here, e.g., display a message or proceed with payment
+      console.log("Checkout clicked! Bill items:", this.billItems);
+    },
+  },
 };
 </script>
 
@@ -205,7 +224,7 @@ export default {
   text-align: left;
   padding: 20px;
 }
-.header{
+.header {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -237,7 +256,6 @@ export default {
   color: #fff;
   font-weight: 600;
 }
-
 
 .search-icon {
   position: absolute;
@@ -433,10 +451,75 @@ export default {
   margin-bottom: 5px;
 }
 
+.patient-table tbody tr:hover {
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add box shadow on hover */
+  transition: box-shadow 0.3s ease-in-out; /* Add a smooth transition effect */
+}
+
+.clickable-row:hover {
+  background-color: #f2f2f2; /* Change background color on hover */
+  cursor: pointer; /* Change cursor to pointer on hover */
+  /* transform: scale(1.02); Scale the row on hover */
+  transition: transform 0.2s ease-in-out; /* Add a smooth transition effect */
+}
 
 @media only screen and (max-width: 768px) {
+  .search-container {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .counter {
+    width: 100%;
+    margin-bottom: 20px;
+  }
+
+  .floating-button {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    padding: 15px;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+
   .medicine-table {
     font-size: 14px;
   }
+ 
+  .header {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap; /* Allow items to wrap onto the next line */
+  justify-content: center;
+  align-items: center;
+}
+
+.search-container {
+  flex: 1; /* Take up remaining space */
+  margin-bottom: 10px;
+}
+
+.search-bar {
+  width: 100%; /* Take up full width */
+}
+
+.button-container {
+  margin-top: 10px;
+}
+
+.counter {
+  width: 100%; /* Take up full width */
+  text-align: center;
+}
+
+
 }
 </style>

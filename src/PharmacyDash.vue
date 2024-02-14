@@ -16,15 +16,15 @@
         <nav class="nav-links">
           <div class="item">
             <img src="./assets/doctor.png" alt="" height="30" width="30">
-          <a href="#" class="active">Dashboard</a>
+          <a href="#" >Dashboard</a>
         </div>
         <div class="item">
             <img src="./assets/pharmacy.png" alt="" height="30" width="30">
-          <a href="#">Pharmacy</a>
+          <a href="/pharmacy" class="active">Pharmacy</a>
         </div>
         <div class="item">
             <img src="./assets/laboratory.png" alt="" height="30" width="30">
-          <a href="#" >Laboratory</a>
+            <a href="/lab">Laboratory</a>
         </div>
         <div class="item">
             <img src="./assets/appointment.png" alt="" height="30" width="30">

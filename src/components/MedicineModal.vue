@@ -7,6 +7,9 @@
         <label for="medicineName">Medicine Name:</label>
         <input v-model="newMedicine.name" type="text" id="medicineName" required />
 
+        <label for="expirydate">Expiry Date:</label>
+        <input v-model="newMedicine.expDate" type="date" id="expirydate" required />
+
         <label for="pricePerPacket">Price per Packet:</label>
         <input v-model="newMedicine.pricePerPacket" type="number" id="pricePerPacket" required />
 
@@ -30,6 +33,7 @@ import { ref } from "vue";
 
 const newMedicine = ref({
   name: "",
+  expiryDate:"",
   pricePerPacket: 0,
   pricePerSachet: 0,
   pricePerTablet: 0,
