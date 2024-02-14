@@ -19,10 +19,10 @@
       <thead class="name-table">
         <tr>
           <th>Medicine Name</th>
-          <th>Price per Packet</th>
-          <th>Price per Sachet</th>
-          <th>Price per Tablet</th>
-          <th>Available Stock</th>
+          <th>Price per Packetssssss</th>
+          <th>Price per Sachetss</th>
+          <th>Price per Tabletss</th>
+          <th>Available Stockss</th>
         </tr>
       </thead>
       <tbody class="medicine-table">
