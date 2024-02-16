@@ -227,7 +227,6 @@ body {
   transition: background-color 0.2s ease-in-out;
   margin-bottom: 12px; /* Add margin-bottom to create space between links */
 }
-
 .nav-links a:hover,
 .nav-links a.active {
   background-image: linear-gradient(

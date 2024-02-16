@@ -1,12 +1,8 @@
 <template>
   <div class="input-container">
-    <div class="input-row-checkbox">
-      <label for="new-patient">New Patient</label>
-      <input type="checkbox" id="new-patient" v-model="isNewPatient" @change="handlePatientTypeChange"/>
-    </div>
-    <div class="input-row-checkbox">
-      <label for="old-patient">Old Patient</label>
-      <input type="checkbox" id="old-patient" v-model="isOldPatient" @change="handlePatientTypeChange"/>
+    <div class="search-bar">
+      <input type="text" placeholder="Search patient" v-model="searchQuery">
+      <button @click="searchPatient">Search</button>
     </div>
     <div class="input-row" v-if="!isOldPatient">
       <label for="full-name">Full Name *</label>
@@ -66,6 +62,12 @@
       <input type="checkbox" id="diabetes" :disabled="isOldPatient" />
     </div>
     <div class="input-row">
+      <label for="fee">Doctor Fee *</label>
+      <input type="text" id="fee" class="small-input" v-model="formData.fee" required :disabled="isOldPatient" />
+      <label for="discount">Discount *</label>
+      <input type="text" id="discount" class="small-input" v-model="formData.discount" required :disabled="isOldPatient" />
+    </div>
+    <div class="input-row">
       <button class="NewButton" @click="submitForm">Submit</button>
     </div>
     <div v-if="requiredFieldsEmpty" class="error-message">
@@ -76,6 +78,8 @@
 
 <script>
 import axios from "axios"
+import jsPDF from 'jspdf';
+
 export default {
   data() {
     return {
@@ -83,54 +87,105 @@ export default {
       isNewPatient: false,
       isOldPatient: false,
       formData: {}, // Add formData object to store form data
+      searchQuery: "", // Add searchQuery to store the search query
     };
   },
   methods: {
-    handlePatientTypeChange() {
-      if (this.isOldPatient) {
-        // If patient is old, clear form data
-        this.formData = {};
-      }
-    },
     submitForm() {
-      const allFields = document.querySelectorAll("input, select"); // Get all input and select fields
+      const requiredFields = document.querySelectorAll(".input-row input[required], .input-row select[required]");
       let emptyFields = false;
-      allFields.forEach((field) => {
-        // Check if the field has an ID and is not a checkbox (checkboxes are handled differently)
-        if (field.id && field.type !== 'checkbox') {
-          if (!field.value) {
-            emptyFields = true;
-            field.style.borderColor = "red"; // Turn required fields border red
-          } else {
-            field.style.borderColor = ""; // Reset border color
-            // Store field value in formData
-            this.formData[field.id] = field.value;
+      let validData = true;
+
+      requiredFields.forEach((field) => {
+        if (!field.value) {
+          emptyFields = true;
+          field.style.borderColor = "red"; // Turn required fields border red
+        } else {
+          field.style.borderColor = ""; // Reset border color
+          this.formData[field.id] = field.value; // Store field value in formData
+
+          // Check if CNIC, Phone number, and Age are digits
+          if (field.id === 'cnic' || field.id === 'phone-no' || field.id === 'age' || field.id === 'fee' || field.id === 'discount') {
+            if (!/^\d+$/.test(field.value)) {
+              validData = false;
+              field.style.borderColor = "red"; // Turn border red for invalid data
+            }
           }
-        } else if (field.id && field.type === 'checkbox') {
-          // For checkboxes, store their state (checked or not) in formData
-          this.formData[field.id] = field.checked;
+
+          // Check if CNIC is 13 digits
+          if (field.id === 'cnic' && field.value.length !== 13) {
+            validData = false;
+            field.style.borderColor = "red"; // Turn border red for invalid data
+          }
+
+          // Check if Phone number is 11 digits
+          if (field.id === 'phone-no' && field.value.length !== 11) {
+            validData = false;
+            field.style.borderColor = "red"; // Turn border red for invalid data
+          }
         }
       });
+
       if (emptyFields) {
         this.requiredFieldsEmpty = true;
+      } else if (!validData) {
+        // Show error message for invalid data
+        alert("Invalid data. Please check CNIC, phone number, age, fee, and discount fields.");
       } else {
-        // Log formData to console
         console.log("Form Data:", this.formData);
-        
         // Potential AJAX request to send formData to backend
-        // Example using Axios library
         axios.post('/your-backend-endpoint', this.formData)
           .then(response => {
             console.log(response.data);
+            this.generatePDF(response.data); // Generate PDF with response data
           })
           .catch(error => {
             console.error(error);
           });
-        
-        // Reset formData
-        this.formData = {};
+        this.formData = {}; // Reset formData
         this.requiredFieldsEmpty = false;
       }
+    },
+    generatePDF(data) {
+  const doc = new jsPDF();
+  doc.text(20, 20, `Name: ${data.name}`);
+  doc.text(20, 30, `CNIC: ${data.cnic}`);
+  doc.text(20, 40, `Fee: ${data.fee}`);
+  doc.text(20, 50, `Doctor Name: ${data.doctor}`);
+  // Add more details as needed
+
+  // Save the PDF to a Blob object
+  const pdfBlob = doc.output('blob');
+
+  // Create a URL for the Blob object
+  const pdfUrl = URL.createObjectURL(pdfBlob);
+
+  // Open the PDF in a new window for printing
+  const printWindow = window.open(pdfUrl, '_blank');
+  if (!printWindow) {
+    alert('Popup blocked. Please allow popups for this website.');
+  }
+
+  // Add a download button to the document
+  const downloadBtn = document.createElement('button');
+  downloadBtn.textContent = 'Download PDF';
+  downloadBtn.addEventListener('click', () => {
+    doc.save("patient_details.pdf");
+  });
+  document.body.appendChild(downloadBtn);
+},
+    searchPatient() {
+      console.log("Searching for Patient:", this.searchQuery);
+
+      // You can send search query to backend using an HTTP request here
+      // Example using Axios library:
+      // axios.get(`/search-patient?query=${this.searchQuery}`)
+      //   .then(response => {
+      //     console.log(response.data);
+      //   })
+      //   .catch(error => {
+      //     console.error(error);
+      //   });
     },
   },
 };
@@ -141,6 +196,40 @@ export default {
   margin-left: 250px; /* Adjust according to your sidebar width */
   padding: 20px; /* Add padding for spacing */
 }
+
+/* New styles for the search bar */
+.search-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 60px;
+  margin-right: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.search-bar input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  width: 200px;
+  margin-right: 10px;
+}
+
+.search-bar button {
+  padding: 8px 15px;
+  background-color: #801004;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.search-bar button:hover {
+  background-color: #b35c00;
+}
+
+/* Existing styles for other input fields */
 .input-row {
   display: flex; /* Use flexbox for layout */
   align-items: center; /* Align items vertically */
@@ -182,21 +271,19 @@ export default {
   border: none; /* Remove button border */
   cursor: pointer; /* Add cursor pointer on hover */
   border-radius: 15px;
-  
 }
 .error-message {
   color: red;
   margin-top: 10px;
 }
 
-  button:hover {
-    background-color: #b35c00;
-  }
+button:hover {
+  background-color: #b35c00;
+}
 .input-row .button-container {
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 15px;
-  
 }
 </style>
