@@ -1,9 +1,5 @@
 <template>
   <div class="input-container">
-    <div class="search-bar">
-      <input type="text" placeholder="Search patient" v-model="searchQuery">
-      <button @click="searchPatient">Search</button>
-    </div>
     <div class="input-row" v-if="!isOldPatient">
       <label for="full-name">Full Name *</label>
       <input type="text" id="full-name" required :disabled="isOldPatient" />
@@ -63,9 +59,23 @@
     </div>
     <div class="input-row">
       <label for="fee">Doctor Fee *</label>
-      <input type="text" id="fee" class="small-input" v-model="formData.fee" required :disabled="isOldPatient" />
+      <input
+        type="text"
+        id="fee"
+        class="small-input"
+        v-model="formData.fee"
+        required
+        :disabled="isOldPatient"
+      />
       <label for="discount">Discount *</label>
-      <input type="text" id="discount" class="small-input" v-model="formData.discount" required :disabled="isOldPatient" />
+      <input
+        type="text"
+        id="discount"
+        class="small-input"
+        v-model="formData.discount"
+        required
+        :disabled="isOldPatient"
+      />
     </div>
     <div class="input-row">
       <button class="NewButton" @click="submitForm">Submit</button>
@@ -73,12 +83,13 @@
     <div v-if="requiredFieldsEmpty" class="error-message">
       Required fields are empty
     </div>
+    <button  @click="generatePDF">BDF</button>
   </div>
 </template>
 
 <script>
-import axios from "axios"
-import jsPDF from 'jspdf';
+// import axios from "axios";
+import jsPDF from "jspdf";
 
 export default {
   data() {
@@ -87,12 +98,13 @@ export default {
       isNewPatient: false,
       isOldPatient: false,
       formData: {}, // Add formData object to store form data
-      searchQuery: "", // Add searchQuery to store the search query
     };
   },
   methods: {
     submitForm() {
-      const requiredFields = document.querySelectorAll(".input-row input[required], .input-row select[required]");
+      const requiredFields = document.querySelectorAll(
+        ".input-row input[required], .input-row select[required]"
+      );
       let emptyFields = false;
       let validData = true;
 
@@ -105,7 +117,13 @@ export default {
           this.formData[field.id] = field.value; // Store field value in formData
 
           // Check if CNIC, Phone number, and Age are digits
-          if (field.id === 'cnic' || field.id === 'phone-no' || field.id === 'age' || field.id === 'fee' || field.id === 'discount') {
+          if (
+            field.id === "cnic" ||
+            field.id === "phone-no" ||
+            field.id === "age" ||
+            field.id === "fee" ||
+            field.id === "discount"
+          ) {
             if (!/^\d+$/.test(field.value)) {
               validData = false;
               field.style.borderColor = "red"; // Turn border red for invalid data
@@ -113,13 +131,13 @@ export default {
           }
 
           // Check if CNIC is 13 digits
-          if (field.id === 'cnic' && field.value.length !== 13) {
+          if (field.id === "cnic" && field.value.length !== 13) {
             validData = false;
             field.style.borderColor = "red"; // Turn border red for invalid data
           }
 
           // Check if Phone number is 11 digits
-          if (field.id === 'phone-no' && field.value.length !== 11) {
+          if (field.id === "phone-no" && field.value.length !== 11) {
             validData = false;
             field.style.borderColor = "red"; // Turn border red for invalid data
           }
@@ -130,62 +148,49 @@ export default {
         this.requiredFieldsEmpty = true;
       } else if (!validData) {
         // Show error message for invalid data
-        alert("Invalid data. Please check CNIC, phone number, age, fee, and discount fields.");
+        alert(
+          "Invalid data. Please check CNIC, phone number, age, fee, and discount fields."
+        );
       } else {
         console.log("Form Data:", this.formData);
         // Potential AJAX request to send formData to backend
-        axios.post('/your-backend-endpoint', this.formData)
-          .then(response => {
-            console.log(response.data);
-            this.generatePDF(response.data); // Generate PDF with response data
-          })
-          .catch(error => {
-            console.error(error);
-          });
+        this.generatePDF(this.formData);
+
+        // ENDPOINT
+        //   axios
+        // .post("/your-backend-endpoint", this.formData)
+        // .then((response) => {
+        //   console.log(response.data);
+        // // Pass response data to generatePDF method
+        // })
+        // .catch((error) => {
+        //   console.error(error);
+        // });
+
         this.formData = {}; // Reset formData
         this.requiredFieldsEmpty = false;
       }
     },
+
     generatePDF(data) {
-  const doc = new jsPDF();
-  doc.text(20, 20, `Name: ${data.name}`);
-  doc.text(20, 30, `CNIC: ${data.cnic}`);
-  doc.text(20, 40, `Fee: ${data.fee}`);
-  doc.text(20, 50, `Doctor Name: ${data.doctor}`);
-  // Add more details as needed
+      const doc = new jsPDF();
+      doc.text(20, 20, `Name: ${data.name}`);
+      doc.text(20, 30, `CNIC: ${data.cnic}`);
+      doc.text(20, 40, `Fee: ${data.fee}`);
+      doc.text(20, 50, `Doctor Name: ${data.doctor}`);
+      // Add more details as needed
 
-  // Save the PDF to a Blob object
-  const pdfBlob = doc.output('blob');
+      // Save the PDF to a Blob object
+      const pdfBlob = doc.output("blob");
 
-  // Create a URL for the Blob object
-  const pdfUrl = URL.createObjectURL(pdfBlob);
+      // Create a URL for the Blob object
+      const pdfUrl = URL.createObjectURL(pdfBlob);
 
-  // Open the PDF in a new window for printing
-  const printWindow = window.open(pdfUrl, '_blank');
-  if (!printWindow) {
-    alert('Popup blocked. Please allow popups for this website.');
-  }
-
-  // Add a download button to the document
-  const downloadBtn = document.createElement('button');
-  downloadBtn.textContent = 'Download PDF';
-  downloadBtn.addEventListener('click', () => {
-    doc.save("patient_details.pdf");
-  });
-  document.body.appendChild(downloadBtn);
-},
-    searchPatient() {
-      console.log("Searching for Patient:", this.searchQuery);
-
-      // You can send search query to backend using an HTTP request here
-      // Example using Axios library:
-      // axios.get(`/search-patient?query=${this.searchQuery}`)
-      //   .then(response => {
-      //     console.log(response.data);
-      //   })
-      //   .catch(error => {
-      //     console.error(error);
-      //   });
+      // Open the PDF in a new window for printing
+      const printWindow = window.open(pdfUrl, "_blank");
+      if (!printWindow) {
+        alert("Popup blocked. Please allow popups for this website.");
+      }
     },
   },
 };
@@ -195,38 +200,6 @@ export default {
 .input-container {
   margin-left: 250px; /* Adjust according to your sidebar width */
   padding: 20px; /* Add padding for spacing */
-}
-
-/* New styles for the search bar */
-.search-bar {
-  position: absolute;
-  top: 0;
-  right: 0;
-  margin-top: 60px;
-  margin-right: 20px;
-  display: flex;
-  align-items: center;
-}
-
-.search-bar input {
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  width: 200px;
-  margin-right: 10px;
-}
-
-.search-bar button {
-  padding: 8px 15px;
-  background-color: #801004;
-  color: white;
-  border: none;
-  cursor: pointer;
-  border-radius: 8px;
-}
-
-.search-bar button:hover {
-  background-color: #b35c00;
 }
 
 /* Existing styles for other input fields */

@@ -1,5 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
+
 const isSidebarOpen = ref(false);
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value;
@@ -100,6 +101,7 @@ onMounted(() => {
         <span class="bar"></span>
       </button>
     </div>
+    
     <router-view> </router-view>
   </div>
   

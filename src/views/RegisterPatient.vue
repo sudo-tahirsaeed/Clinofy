@@ -1,5 +1,6 @@
 <script>
 import InputFields from '@/components/InputFields.vue';
+import SearchField from '@/components/SearchField.vue';
 
 export default {
     name: "RegisterPatient",
@@ -7,10 +8,11 @@ export default {
         require: true,
         String,
     },
-    components: { InputFields}
+    components: { InputFields, SearchField}
 };
 </script>
 <template>
+  <SearchField></SearchField>
   <InputFields></InputFields>
   
   
